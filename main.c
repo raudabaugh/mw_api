@@ -2,15 +2,16 @@
 
 #include <stdio.h>
 #include <mpi.h>
+#include <gmp.h>
 #include "mw_api.h"
 
 struct userdef_work_t {
-  int number;
-  int *factors_to_try;
+  mpz_t number;
+  mpz_t *factors_to_try;
 };
 
 struct userdef_result_t {
-  int *factors;
+  mpz_t *factors;
 };
 
 mw_work_t** create_work(int argc, char **argv) {
@@ -25,7 +26,10 @@ mw_work_t** create_work(int argc, char **argv) {
   MPI_Comm_rank(MPI_COMM_WORLD, &myid);
 
   if (myid == 0) {
-    printf("%s\n", argv[1]);
+    mpz_t number, sqrt;
+    mpz_init_set_str(number, argv[1], 10);
+    mpz_sqrt(sqrt, number);
+    printf("%s\n", mpz_get_str(NULL, 10, sqrt));
   }
   return NULL;
 }
