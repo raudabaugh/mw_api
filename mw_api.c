@@ -25,6 +25,4 @@ void MW_Run (int argc, char **argv, struct mw_api_spec *f) {
   }
 
   f->compute(work);
-  MPI_Finalize();
-  exit(0);
 }

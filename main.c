@@ -78,6 +78,23 @@ int process_results(int sz, mw_result_t *res) {
 
 mw_result_t* do_work(mw_work_t *work) {
   printf("Received work: %s,%s,%s\n", work->number, work->lb, work->ub);
+  mpz_t number, lb, ub, one, zero;
+  mpz_init_set_str(number, work->number, 10);
+  mpz_init_set_str(lb, work->lb, 10);
+  mpz_init_set_str(ub, work->ub, 10);
+  mpz_init_set_ui(one, 1);
+  mpz_init_set_ui(zero, 0);
+
+  while (mpz_cmp(lb,ub) <= 0) {
+    mpz_add(lb, lb, one);
+    mpz_t r;
+    mpz_init(r);
+    mpz_mod(r, number, lb);
+    if (mpz_cmp(zero, r) == 0) {
+      printf("%s\n", mpz_get_str(NULL, 10, lb));
+    }
+  }
+
   return NULL;
 }
 
