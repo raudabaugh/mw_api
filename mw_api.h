@@ -10,7 +10,7 @@ struct mw_api_spec {
    mw_work_t **(*create) (int argc, char **argv);
       /* create work: return a NULL-terminated list of work. Return NULL if it fails. */
 
-   int (*result) (int sz, mw_result_t *res);
+   int (*result) (mw_result_t *res);
       /* process result. Input is a collection of results, of size sz. Returns 1 on success, 0 on failure. */
 
    mw_result_t *(*compute) (mw_work_t *work);

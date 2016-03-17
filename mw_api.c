@@ -14,6 +14,7 @@ void MW_Run (int argc, char **argv, struct mw_api_spec *f) {
   mw_work_t *work = malloc(f->work_sz);
 
   if (myid == 0) {
+
     mw_work_t** work_arr = f->create(argc, argv);
     work = work_arr[0];
     int i;
@@ -24,5 +25,16 @@ void MW_Run (int argc, char **argv, struct mw_api_spec *f) {
       MPI_Recv(work, f->work_sz, MPI_CHAR, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
   }
 
-  f->compute(work);
+  mw_result_t *result = f->compute(work);
+
+  if (myid == 0) {
+    f->result(result);
+    int i;
+    for (i = 1; i < sz; ++i) {
+      MPI_Recv(result, f->res_sz, MPI_CHAR, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+      f->result(result);
+    }
+  } else {
+    MPI_Send(result, f->res_sz, MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+  }
 }
